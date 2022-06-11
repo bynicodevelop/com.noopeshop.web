@@ -1,11 +1,17 @@
 import _ from 'lodash';
 
-export const useCreateProduct = () => {
+export const useProducts = () => {
     const id = ref("");
-    const title = ref("Product Title");
-    const description = ref("Description");
-    const urlSource = ref("https://nico-develop.com");
+    const title = ref("");
+    const description = ref("");
+    const urlSource = ref("");
     const media = ref(null);
+
+    const onLoadAll = async () => {
+        const { data } = await useFetch(`/api/v1/products`);
+
+        return data.value;
+    }
 
 
     const onCreate = async () => {
@@ -29,6 +35,7 @@ export const useCreateProduct = () => {
         description,
         urlSource,
         media,
+        onLoadAll,
         onCreate,
     }
 }
