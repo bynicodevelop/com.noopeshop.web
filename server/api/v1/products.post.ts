@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
     const mediaRepository = new MediaRepository();
 
-    const pathFile = await mediaRepository.upload(media);
+    const pathesFile = await mediaRepository.upload(media);
 
     const productRepository = new ProductRepository();
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
         title,
         description,
         urlSource,
-        media: pathFile,
+        media: pathesFile,
     });
 
     return {}

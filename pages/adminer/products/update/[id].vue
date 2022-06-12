@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="adminer">
-    <form @submit.prevent="onCreate" class="space-y-8 divide-y divide-gray-200">
+    <form @submit.prevent="onUpdated" class="space-y-8 divide-y divide-gray-200">
       <div class="space-y-8 divide-y divide-gray-200">
         <div>
           <div>
@@ -95,7 +95,7 @@
               </div>
             </div>
 
-            <div class="sm:col-span-6">
+            <!-- <div class="sm:col-span-6">
               <label
                 for="cover-photo"
                 class="block text-sm font-medium text-gray-700"
@@ -161,7 +161,7 @@
                   <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -199,30 +199,7 @@
 </template>
 
 <script setup>
-const { compressImage } = useMedia();
+const { title, description, urlSource, media, onGetProduct, onUpdated } = useProducts();
 
-const { title, description, urlSource, media, onCreate } = useProducts();
-
-const onFileChange = async (e) => {
-  let files = e.target.files;
-
-  const readData = (f) =>  new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(f);
-  });
-
-
-  const compressedImages = await Promise.all(Array.from(files).map(async (file) => ({
-    type: file.type,
-    size: file.size,
-    name: file.name,
-    data: await compressImage(file)
-  })));
-
-  media.value = await Promise.all(compressedImages.map(async (img) => ({
-    ...img,
-    data: await readData(img.data),
-  })));
-};
+await onGetProduct();
 </script>

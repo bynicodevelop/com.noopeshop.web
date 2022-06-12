@@ -6,25 +6,32 @@ export class MediaRepository {
         return `${md5(file.name + new Date().toISOString())}.${file.name.split('.').pop()}`;
     }
 
-    async upload(file: { data: string, name: string, type: string, size: number }): Promise<string> {
-        logger.info(`Prepare file ${file.name}`);
+    async upload(files: Array<{ data: string, name: string, type: string, size: number }>): Promise<Array<string>> {
+        logger.info('Uploading files...');
 
-        const fileName = this._getFileName(file);
+        const promises = files.map(async (file) => {
+            const fileName = this._getFileName(file);
 
-        const pathFile = `products/medias/${fileName}`;
+            logger.info(`Uploading file ${fileName}...`);
 
-        const imageBuffer = Buffer.from(file.data.split(',')[1], 'base64');
+            const pathFile = `products/medias/${fileName}`;
 
-        logger.info('Uploading file to storage');
-        await storage.bucket().file(pathFile).save(imageBuffer, {
-            metadata: {
-                contentType: file.type,
-                cacheControl: 'public, max-age=31536000',
-                contentDisposition: `inline; filename="${fileName}"`
-            }
+            const imageBuffer = Buffer.from(file.data.split(',')[1], 'base64');
+
+            logger.info('Uploading file to storage');
+
+            await storage.bucket().file(pathFile).save(imageBuffer, {
+                metadata: {
+                    contentType: file.type,
+                    cacheControl: 'public, max-age=31536000',
+                    contentDisposition: `inline; filename="${fileName}"`
+                }
+            });
+
+            logger.info(`File ${file.name} uploaded`, { path: pathFile });
+            return pathFile;
         });
 
-        logger.info(`File ${file.name} uploaded`, { path: pathFile });
-        return pathFile;
+        return await Promise.all(promises);
     }
 }
