@@ -1,5 +1,7 @@
 <template>
   <div>
+    <Notification />
+
     <slot />
     <footer class="bg-gray-50">
       <div
@@ -29,7 +31,13 @@
           <p class="text-center text-base text-gray-400">
             &copy; {{ new Date().getFullYear() }} {{ SITE_NAME }}, © All rights
             reserved. -
-            <NuxtLink to="/policies/privacy" class="hover:underline" target="_blank" > Politiques de confidentialités </NuxtLink>
+            <NuxtLink
+              to="/policies/privacy"
+              class="hover:underline"
+              target="_blank"
+            >
+              Politiques de confidentialités
+            </NuxtLink>
           </p>
         </div>
       </div>
@@ -39,6 +47,14 @@
 
 <script setup>
 const { SITE_NAME } = useRuntimeConfig();
+
+useHead({
+  script: [
+    {
+      src: "/scripts/facebook.js",
+    },
+  ],
+});
 
 const navigation = [
   // {
