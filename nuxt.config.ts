@@ -15,7 +15,7 @@ export default defineNuxtConfig({
         PIXEL_ID: process.env.PIXEL_ID,
     },
 
-    serverRuntimeConfig: {
+    privateRuntimeConfig: {
         SPARKPOST_API_KEY: process.env.SPARKPOST_API_KEY,
     }
 })
